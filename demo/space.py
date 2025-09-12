@@ -3,7 +3,7 @@ import gradio as gr
 from app import demo as app
 import os
 
-_docs = {'CreditsPanel': {'description': 'A Gradio component for displaying credits with customizable visual effects, such as scrolling or Star Wars-style animations.\nSupports displaying a logo, licenses, and configurable text styling.\n\n    EVENTS (list): Supported events for the component, currently only `change`.', 'members': {'__init__': {'value': {'type': 'Any', 'default': 'None', 'description': None}, 'credits': {'type': 'typing.Union[\n    typing.List[typing.Dict[str, str]],\n    typing.Callable,\n    NoneType,\n][\n    typing.List[typing.Dict[str, str]][\n        typing.Dict[str, str][str, str]\n    ],\n    Callable,\n    None,\n]', 'default': 'None', 'description': None}, 'height': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'width': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'licenses': {'type': 'typing.Optional[typing.Dict[str, str | pathlib.Path]][\n    typing.Dict[str, str | pathlib.Path][\n        str, str | pathlib.Path\n    ],\n    None,\n]', 'default': 'None', 'description': None}, 'effect': {'type': '"scroll" | "starwars" | "matrix"', 'default': '"scroll"', 'description': None}, 'speed': {'type': 'float', 'default': '40.0', 'description': None}, 'base_font_size': {'type': 'float', 'default': '1.5', 'description': None}, 'intro_title': {'type': 'str | None', 'default': 'None', 'description': None}, 'intro_subtitle': {'type': 'str | None', 'default': 'None', 'description': None}, 'sidebar_position': {'type': '"right" | "bottom"', 'default': '"right"', 'description': None}, 'logo_path': {'type': 'str | pathlib.Path | None', 'default': 'None', 'description': None}, 'show_logo': {'type': 'bool', 'default': 'True', 'description': None}, 'show_licenses': {'type': 'bool', 'default': 'True', 'description': None}, 'logo_position': {'type': '"center" | "left" | "right"', 'default': '"center"', 'description': None}, 'logo_sizing': {'type': '"stretch" | "crop" | "resize"', 'default': '"resize"', 'description': None}, 'logo_width': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'logo_height': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'scroll_background_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'scroll_title_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'scroll_name_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'label': {'type': 'str | gradio.i18n.I18nData | None', 'default': 'None', 'description': None}, 'every': {'type': 'float | None', 'default': 'None', 'description': None}, 'inputs': {'type': 'typing.Union[\n    gradio.components.base.Component,\n    typing.Sequence[gradio.components.base.Component],\n    set[gradio.components.base.Component],\n    NoneType,\n][\n    gradio.components.base.Component,\n    typing.Sequence[gradio.components.base.Component][\n        gradio.components.base.Component\n    ],\n    set[gradio.components.base.Component],\n    None,\n]', 'default': 'None', 'description': None}, 'show_label': {'type': 'bool', 'default': 'False', 'description': None}, 'container': {'type': 'bool', 'default': 'True', 'description': None}, 'scale': {'type': 'int | None', 'default': 'None', 'description': None}, 'min_width': {'type': 'int', 'default': '160', 'description': None}, 'interactive': {'type': 'bool | None', 'default': 'None', 'description': None}, 'visible': {'type': 'bool', 'default': 'True', 'description': None}, 'elem_id': {'type': 'str | None', 'default': 'None', 'description': None}, 'elem_classes': {'type': 'list[str] | str | None', 'default': 'None', 'description': None}, 'render': {'type': 'bool', 'default': 'True', 'description': None}, 'key': {'type': 'int | str | tuple[int | str, Ellipsis] | None', 'default': 'None', 'description': None}, 'preserved_by_key': {'type': 'list[str] | str | None', 'default': '"value"', 'description': None}}, 'postprocess': {'value': {'type': 'Any', 'description': None}}, 'preprocess': {'return': {'type': 'typing.Optional[typing.Dict[str, typing.Any]][\n    typing.Dict[str, typing.Any][str, Any], None\n]', 'description': 'Dict[str, Any] | None: The input payload, returned unchanged.'}, 'value': None}}, 'events': {'change': {'type': None, 'default': None, 'description': 'Triggered when the value of the CreditsPanel changes either because of user input (e.g. a user types in a textbox) OR because of a function update (e.g. an image receives a value from the output of an event trigger). See `.input()` for a listener that is only triggered by user input.'}}}, '__meta__': {'additional_interfaces': {}, 'user_fn_refs': {'CreditsPanel': []}}}
+_docs = {'CreditsPanel': {'description': 'A Gradio component for displaying credits with customizable visual effects, such as scrolling or Star Wars-style animations.\nSupports displaying a logo, licenses, and configurable text styling.\n\n    EVENTS (list): Supported events for the component, currently only `change`.', 'members': {'__init__': {'value': {'type': 'Any', 'default': 'None', 'description': None}, 'credits': {'type': 'typing.Union[\n    typing.List[typing.Dict[str, str]],\n    typing.Callable,\n    NoneType,\n][\n    typing.List[typing.Dict[str, str]][\n        typing.Dict[str, str][str, str]\n    ],\n    Callable,\n    None,\n]', 'default': 'None', 'description': None}, 'height': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'width': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'licenses': {'type': 'typing.Optional[typing.Dict[str, str | pathlib.Path]][\n    typing.Dict[str, str | pathlib.Path][\n        str, str | pathlib.Path\n    ],\n    None,\n]', 'default': 'None', 'description': None}, 'effect': {'type': '"scroll" | "starwars" | "matrix"', 'default': '"scroll"', 'description': None}, 'speed': {'type': 'float', 'default': '40.0', 'description': None}, 'base_font_size': {'type': 'float', 'default': '1.5', 'description': None}, 'intro_title': {'type': 'str | None', 'default': 'None', 'description': None}, 'intro_subtitle': {'type': 'str | None', 'default': 'None', 'description': None}, 'sidebar_position': {'type': '"right" | "bottom"', 'default': '"right"', 'description': None}, 'logo_path': {'type': 'str | pathlib.Path | None', 'default': 'None', 'description': None}, 'show_logo': {'type': 'bool', 'default': 'True', 'description': None}, 'show_licenses': {'type': 'bool', 'default': 'True', 'description': None}, 'show_credits': {'type': 'bool', 'default': 'True', 'description': None}, 'logo_position': {'type': '"center" | "left" | "right"', 'default': '"center"', 'description': None}, 'logo_sizing': {'type': '"stretch" | "crop" | "resize"', 'default': '"resize"', 'description': None}, 'logo_width': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'logo_height': {'type': 'int | str | None', 'default': 'None', 'description': None}, 'scroll_background_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'scroll_title_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'scroll_name_color': {'type': 'str | None', 'default': 'None', 'description': None}, 'label': {'type': 'str | gradio.i18n.I18nData | None', 'default': 'None', 'description': None}, 'every': {'type': 'float | None', 'default': 'None', 'description': None}, 'inputs': {'type': 'typing.Union[\n    gradio.components.base.Component,\n    typing.Sequence[gradio.components.base.Component],\n    set[gradio.components.base.Component],\n    NoneType,\n][\n    gradio.components.base.Component,\n    typing.Sequence[gradio.components.base.Component][\n        gradio.components.base.Component\n    ],\n    set[gradio.components.base.Component],\n    None,\n]', 'default': 'None', 'description': None}, 'show_label': {'type': 'bool', 'default': 'False', 'description': None}, 'container': {'type': 'bool', 'default': 'True', 'description': None}, 'scale': {'type': 'int | None', 'default': 'None', 'description': None}, 'min_width': {'type': 'int', 'default': '160', 'description': None}, 'interactive': {'type': 'bool | None', 'default': 'None', 'description': None}, 'visible': {'type': 'bool', 'default': 'True', 'description': None}, 'elem_id': {'type': 'str | None', 'default': 'None', 'description': None}, 'elem_classes': {'type': 'list[str] | str | None', 'default': 'None', 'description': None}, 'render': {'type': 'bool', 'default': 'True', 'description': None}, 'key': {'type': 'int | str | tuple[int | str, Ellipsis] | None', 'default': 'None', 'description': None}, 'preserved_by_key': {'type': 'list[str] | str | None', 'default': '"value"', 'description': None}}, 'postprocess': {'value': {'type': 'Any', 'description': None}}, 'preprocess': {'return': {'type': 'typing.Optional[typing.Dict[str, typing.Any]][\n    typing.Dict[str, typing.Any][str, Any], None\n]', 'description': 'Dict[str, Any] | None: The input payload, returned unchanged.'}, 'value': None}}, 'events': {'change': {'type': None, 'default': None, 'description': 'Triggered when the value of the CreditsPanel changes either because of user input (e.g. a user types in a textbox) OR because of a function update (e.g. an image receives a value from the output of an event trigger). See `.input()` for a listener that is only triggered by user input.'}}}, '__meta__': {'additional_interfaces': {}, 'user_fn_refs': {'CreditsPanel': []}}}
 
 abs_path = os.path.join(os.path.dirname(__file__), "css.css")
 
@@ -21,7 +21,7 @@ with gr.Blocks(
 # `gradio_creditspanel`
 
 <div style="display: flex; gap: 7px;">
-<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.1%20-%20orange">  
+<a href="https://pypi.org/project/gradio_creditspanel/" target="_blank"><img alt="PyPI - Version" src="https://img.shields.io/pypi/v/gradio_creditspanel"></a>  
 </div>
 
 Credits Panel for Gradio UI
@@ -111,11 +111,21 @@ DEFAULT_SPEEDS = {
 # These functions define the application's interactive logic.
 
 def update_panel(
-    effect: str, speed: float, base_font_size: float,
-    intro_title: str, intro_subtitle: str, sidebar_position: str,
-    show_logo: bool, show_licenses: bool, logo_position: str,
-    logo_sizing: str, logo_width: str | None, logo_height: str | None,
-    scroll_background_color: str | None, scroll_title_color: str | None,
+    effect: str, 
+    speed: float, 
+    base_font_size: float,
+    intro_title: str, 
+    intro_subtitle: str, 
+    sidebar_position: str,
+    show_logo: bool, 
+    show_licenses: bool, 
+    show_credits: bool, 
+    logo_position: str,
+    logo_sizing: str, 
+    logo_width: str | None, 
+    logo_height: str | None,
+    scroll_background_color: str | None, 
+    scroll_title_color: str | None,
     scroll_name_color: str | None
 ) -> dict:
     \"\"\"
@@ -132,6 +142,7 @@ def update_panel(
         sidebar_position=sidebar_position,
         show_logo=show_logo,
         show_licenses=show_licenses,
+        show_credits=show_credits,
         logo_position=logo_position,
         logo_sizing=logo_sizing,
         logo_width=logo_width,
@@ -195,7 +206,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         )
         show_logo_checkbox = gr.Checkbox(label="Show Logo", value=True)
         show_licenses_checkbox = gr.Checkbox(label="Show Licenses", value=True)
-
+        show_credits_checkbox = gr.Checkbox(label="Show Credits", value=True)
         gr.Markdown("### Logo Customization")
         logo_position_radio = gr.Radio(
             ["left", "center", "right"], label="Logo Position", value="center"
@@ -225,6 +236,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         logo_path="./assets/logo.webp",
         show_logo=True,
         show_licenses=True,
+        show_credits=True,
         logo_position="center",
         logo_sizing="resize",
         logo_width="200px",
@@ -236,11 +248,22 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
 
     # List of all input components that should trigger a panel update
     inputs = [
-        effect_radio, speed_slider, font_size_slider,
-        intro_title_input, intro_subtitle_input,
-        sidebar_position_radio, show_logo_checkbox, show_licenses_checkbox,
-        logo_position_radio, logo_sizing_radio, logo_width_input, logo_height_input,
-        scroll_background_color, scroll_title_color, scroll_name_color
+        effect_radio, 
+        speed_slider, 
+        font_size_slider,
+        intro_title_input, 
+        intro_subtitle_input,
+        sidebar_position_radio, 
+        show_logo_checkbox, 
+        show_licenses_checkbox,
+        show_credits_checkbox,
+        logo_position_radio, 
+        logo_sizing_radio, 
+        logo_width_input, 
+        logo_height_input,
+        scroll_background_color, 
+        scroll_title_color, 
+        scroll_name_color
     ]
 
     # --- 4. EVENT BINDING ---

@@ -38,6 +38,7 @@ class CreditsPanel(Component):
         logo_path: str | Path | None = None,
         show_logo: bool = True,
         show_licenses: bool = True,
+        show_credits: bool = True,
         logo_position: Literal["center", "left", "right"] = "center",
         logo_sizing: Literal["stretch", "crop", "resize"] = "resize",
         logo_width: int | str | None = None,
@@ -78,6 +79,7 @@ class CreditsPanel(Component):
             logo_path (str | Path | None, optional): Path or URL to the logo image.
             show_logo (bool, optional): Whether to display the logo. Defaults to True.
             show_licenses (bool, optional): Whether to display licenses. Defaults to True.
+            show_credits (bool, optional): Whether to display the credits. Defaults to True.
             logo_position (Literal["center", "left", "right"], optional): Logo alignment. Defaults to "center".
             logo_sizing (Literal["stretch", "crop", "resize"], optional): Logo sizing mode. Defaults to "resize".
             logo_width (int | str | None, optional): Logo width (e.g., in pixels or CSS units).
@@ -113,6 +115,7 @@ class CreditsPanel(Component):
         self.logo_path = logo_path
         self.show_logo = show_logo
         self.show_licenses = show_licenses
+        self.show_credits = show_credits
         self.logo_position = logo_position
         self.logo_sizing = logo_sizing
         self.logo_width = logo_width
@@ -207,6 +210,7 @@ class CreditsPanel(Component):
             "logo_path": self._process_logo_path(),
             "show_logo": self.show_logo,
             "show_licenses": self.show_licenses,
+            "show_credits": self.show_credits,
             "logo_position": self.logo_position,
             "logo_sizing": self.logo_sizing,
             "logo_width": self.logo_width,
@@ -241,6 +245,7 @@ class CreditsPanel(Component):
             "logo_path": None,
             "show_logo": True,
             "show_licenses": True,
+            "show_credits": True,
             "logo_position": "center",
             "logo_sizing": "resize",
             "logo_width": None,

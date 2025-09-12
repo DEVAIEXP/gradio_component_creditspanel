@@ -71,11 +71,21 @@ DEFAULT_SPEEDS = {
 # These functions define the application's interactive logic.
 
 def update_panel(
-    effect: str, speed: float, base_font_size: float,
-    intro_title: str, intro_subtitle: str, sidebar_position: str,
-    show_logo: bool, show_licenses: bool, logo_position: str,
-    logo_sizing: str, logo_width: str | None, logo_height: str | None,
-    scroll_background_color: str | None, scroll_title_color: str | None,
+    effect: str, 
+    speed: float, 
+    base_font_size: float,
+    intro_title: str, 
+    intro_subtitle: str, 
+    sidebar_position: str,
+    show_logo: bool, 
+    show_licenses: bool, 
+    show_credits: bool, 
+    logo_position: str,
+    logo_sizing: str, 
+    logo_width: str | None, 
+    logo_height: str | None,
+    scroll_background_color: str | None, 
+    scroll_title_color: str | None,
     scroll_name_color: str | None
 ) -> dict:
     """
@@ -92,6 +102,7 @@ def update_panel(
         sidebar_position=sidebar_position,
         show_logo=show_logo,
         show_licenses=show_licenses,
+        show_credits=show_credits,
         logo_position=logo_position,
         logo_sizing=logo_sizing,
         logo_width=logo_width,
@@ -155,7 +166,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         )
         show_logo_checkbox = gr.Checkbox(label="Show Logo", value=True)
         show_licenses_checkbox = gr.Checkbox(label="Show Licenses", value=True)
-
+        show_credits_checkbox = gr.Checkbox(label="Show Credits", value=True)
         gr.Markdown("### Logo Customization")
         logo_position_radio = gr.Radio(
             ["left", "center", "right"], label="Logo Position", value="center"
@@ -185,6 +196,7 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         logo_path="./assets/logo.webp",
         show_logo=True,
         show_licenses=True,
+        show_credits=True,
         logo_position="center",
         logo_sizing="resize",
         logo_width="200px",
@@ -196,11 +208,22 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
 
     # List of all input components that should trigger a panel update
     inputs = [
-        effect_radio, speed_slider, font_size_slider,
-        intro_title_input, intro_subtitle_input,
-        sidebar_position_radio, show_logo_checkbox, show_licenses_checkbox,
-        logo_position_radio, logo_sizing_radio, logo_width_input, logo_height_input,
-        scroll_background_color, scroll_title_color, scroll_name_color
+        effect_radio, 
+        speed_slider, 
+        font_size_slider,
+        intro_title_input, 
+        intro_subtitle_input,
+        sidebar_position_radio, 
+        show_logo_checkbox, 
+        show_licenses_checkbox,
+        show_credits_checkbox,
+        logo_position_radio, 
+        logo_sizing_radio, 
+        logo_width_input, 
+        logo_height_input,
+        scroll_background_color, 
+        scroll_title_color, 
+        scroll_name_color
     ]
 
     # --- 4. EVENT BINDING ---

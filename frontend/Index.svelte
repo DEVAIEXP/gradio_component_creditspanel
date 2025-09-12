@@ -22,6 +22,7 @@
    * @property {{path: string | null, url: string | null, orig_name: string | null, mime_type: string | null} | null} logo_path - Logo file details.
    * @property {boolean} show_logo - Show logo.
    * @property {boolean} show_licenses - Show licenses.
+   * @property {boolean} show_credits - Show credits.
    * @property {"center" | "left" | "right"} logo_position - Logo alignment.
    * @property {"stretch" | "crop" | "resize"} logo_sizing - Logo sizing mode.
    * @property {number | string | null} logo_width - Logo width.
@@ -66,6 +67,7 @@
     logo_path: null,
     show_logo: true,
     show_licenses: true,
+    show_credits: true,
     logo_position: "center",
     logo_sizing: "resize",
     logo_width: null,
@@ -166,83 +168,89 @@
   {/key}
 
   <!-- Credits and licenses panel -->
-  {#key effectiveValue.sidebar_position}
-    <div class="outer-credits-wrapper" style:width={width_style}>
-      <div
-        class="credits-panel-wrapper"
-        style:width={width_style}
-        style:height={effectiveValue.sidebar_position === "right"
-          ? height_style
-          : undefined}
-      >
-        {#key { effect: effectiveValue.effect, speed: effectiveValue.speed }}
-          <div
-            class="main-credits-panel"
-            style:height={height_style}
-            style:width={effectiveValue.sidebar_position === "right" &&
-            effectiveValue.show_licenses
-              ? "calc(100% - var(--sidebar-width, 400px))"
-              : width_style}
+  {#if effectiveValue.show_licenses || effectiveValue.show_credits} 
+    {#key effectiveValue.sidebar_position}
+      <div class="outer-credits-wrapper" style:width={width_style}>
+        <div
+            class="credits-panel-wrapper"
+            style:width={width_style}
+            style:height={effectiveValue.sidebar_position === "right"
+              ? height_style
+              : undefined}
+            style:--main-panel-width={!effectiveValue.show_credits && effectiveValue.show_licenses
+              ? "0px"
+              : "auto"}
           >
-            {#if effectiveValue.effect === "scroll"}
-              <ScrollEffect
-                credits={effectiveValue.credits}
-                speed={effectiveValue.speed}
-                base_font_size={effectiveValue.base_font_size}
-                intro_title={effectiveValue.intro_title}
-                intro_subtitle={effectiveValue.intro_subtitle}
-                background_color={effectiveValue.scroll_background_color}
-                title_color={effectiveValue.scroll_title_color}
-                name_color={effectiveValue.scroll_name_color}               
-              />
-            {:else if effectiveValue.effect === "starwars"}
-              <StarWarsEffect
-                credits={effectiveValue.credits}
-                speed={effectiveValue.speed}
-                base_font_size={effectiveValue.base_font_size}
-                intro_title={effectiveValue.intro_title}
-                intro_subtitle={effectiveValue.intro_subtitle}                
-              />
-            {:else if effectiveValue.effect === "matrix"}
-              <MatrixEffect
-                credits={effectiveValue.credits}
-                speed={effectiveValue.speed}
-                base_font_size={effectiveValue.base_font_size}
-                intro_title={effectiveValue.intro_title}
-                intro_subtitle={effectiveValue.intro_subtitle}                
-              />
-            {/if}
-          </div>
-        {/key}
-        {#if effectiveValue.show_licenses && Object.keys(effectiveValue.licenses).length > 0}
-          <div class="licenses-sidebar">
-            <h3>Licenses</h3>
-            <ul>
-              {#each Object.entries(effectiveValue.licenses) as [name, content] (name)}
-                <li>
-                  <button
-                    class:selected={selected_license_name === name}
-                    on:click={() => show_license(name)}
-                    type="button"
-                  >
-                    {name}
-                  </button>
-                </li>
-              {/each}
-            </ul>
-            {#if selected_license_name}
-              <div class="license-display">
-                <h4>{selected_license_name}</h4>
-                <pre>{effectiveValue.licenses[selected_license_name]}</pre>
-              </div>
-            {/if}
-          </div>
-        {/if}
+          {#if effectiveValue.show_credits}
+            {#key { effect: effectiveValue.effect, speed: effectiveValue.speed }}
+                <div
+                  class="main-credits-panel"
+                  style:height={height_style}
+                  style:width={effectiveValue.sidebar_position === "right" &&
+                  effectiveValue.show_licenses
+                    ? "calc(100% - var(--sidebar-width, 400px))"
+                    : width_style}
+                >
+                  {#if effectiveValue.effect === "scroll"}
+                    <ScrollEffect
+                      credits={effectiveValue.credits}
+                      speed={effectiveValue.speed}
+                      base_font_size={effectiveValue.base_font_size}
+                      intro_title={effectiveValue.intro_title}
+                      intro_subtitle={effectiveValue.intro_subtitle}
+                      background_color={effectiveValue.scroll_background_color}
+                      title_color={effectiveValue.scroll_title_color}
+                      name_color={effectiveValue.scroll_name_color}               
+                    />
+                  {:else if effectiveValue.effect === "starwars"}
+                    <StarWarsEffect
+                      credits={effectiveValue.credits}
+                      speed={effectiveValue.speed}
+                      base_font_size={effectiveValue.base_font_size}
+                      intro_title={effectiveValue.intro_title}
+                      intro_subtitle={effectiveValue.intro_subtitle}                
+                    />
+                  {:else if effectiveValue.effect === "matrix"}
+                    <MatrixEffect
+                      credits={effectiveValue.credits}
+                      speed={effectiveValue.speed}
+                      base_font_size={effectiveValue.base_font_size}
+                      intro_title={effectiveValue.intro_title}
+                      intro_subtitle={effectiveValue.intro_subtitle}                
+                    />
+                  {/if}
+                </div>
+            {/key}
+          {/if}
+          {#if effectiveValue.show_licenses && Object.keys(effectiveValue.licenses).length > 0}
+            <div class="licenses-sidebar">
+              <h3>Licenses</h3>
+              <ul>
+                {#each Object.entries(effectiveValue.licenses) as [name, content] (name)}
+                  <li>
+                    <button
+                      class:selected={selected_license_name === name}
+                      on:click={() => show_license(name)}
+                      type="button"
+                    >
+                      {name}
+                    </button>
+                  </li>
+                {/each}
+              </ul>
+              {#if selected_license_name}
+                <div class="license-display">
+                  <h4>{selected_license_name}</h4>
+                  <pre>{effectiveValue.licenses[selected_license_name]}</pre>
+                </div>
+              {/if}
+            </div>
+          {/if}
+        </div>
       </div>
-    </div>
-  {/key}
+    {/key}
+  {/if}
 </Block>
-
 <svelte:head>
   {#if effectiveValue.sidebar_position === "bottom"}
     <!-- Bottom sidebar styles -->
@@ -254,6 +262,7 @@
         --border-left: none;
         --border-top: 1px solid var(--border-color-primary);
         --sidebar-max-height: 400px;
+        --border: none;
       }
       .licenses-sidebar {
         width: 100% !important;
@@ -267,7 +276,15 @@
   {:else}
     <!-- Right sidebar styles -->
     <style>
-            .credits-panel-wrapper { flex-direction: row !important; --panel-direction: row; --sidebar-width: 400px; --border-left: 1px solid var(--border-color-primary); --border-top: none; --sidebar-max-height: {height_style}; }
+            .credits-panel-wrapper { 
+              flex-direction: row !important; 
+              --panel-direction: row; 
+              --sidebar-width: 400px; 
+              --border-left: 1px solid var(--border-color-primary); 
+              --border-top: none; 
+              --border: none;
+              --sidebar-max-height: {height_style}; 
+            }
             .licenses-sidebar { width: var(--sidebar-width, 400px) !important; border-left: 1px solid var(--border-color-primary) !important; border-top: none !important; }
             .main-credits-panel { width: calc(100% - var(--sidebar-width, 400px)) !important; }
     </style>
@@ -298,11 +315,11 @@
   /* Logo panel */
   .logo-panel {
     background: var(--background-fill-primary);
-    border: none;
-    border-bottom: 1px solid var(--border-color-primary);
+    border: none;    
     display: flex !important;
     align-items: center;
     justify-content: var(--logo-justify, center);
+    padding: 0px 0px 20px 0px;
     width: 100%;
   }
   /* Credits and licenses container */
@@ -326,17 +343,17 @@
     position: relative;
   }
   /* Licenses sidebar */
-  .licenses-sidebar {
-    width: var(--sidebar-width, 400px);
+  .licenses-sidebar {  
+    width: calc(100% - var(--main-panel-width, 400px));
     max-width: 100%;
     max-height: var(--sidebar-max-height, none);
     flex-shrink: 1;
-    flex-grow: 0;
+    flex-grow: 1; 
     background: var(--background-fill-secondary);
     overflow-y: auto;
     border-left: var(--border-left, 1px solid var(--border-color-primary));
     border-top: var(--border-top, none);
-  }
+}
   .licenses-sidebar h3 {
     margin: var(--spacing-lg);
     font-size: var(--text-lg);
