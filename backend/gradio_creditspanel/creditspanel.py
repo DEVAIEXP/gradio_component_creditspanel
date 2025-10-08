@@ -46,6 +46,11 @@ class CreditsPanel(Component):
         scroll_background_color: str | None = None,
         scroll_title_color: str | None = None,
         scroll_name_color: str | None = None,
+        layout_style: Literal["stacked", "two-column"] = "stacked",
+        title_uppercase: bool = False,
+        name_uppercase: bool = False,
+        section_title_uppercase: bool = True,
+        swap_font_sizes_on_two_column: bool = False,
         label: str | I18nData | None = None,
         every: float | None = None,
         inputs: Component | Sequence[Component] | set[Component] | None = None,
@@ -87,6 +92,11 @@ class CreditsPanel(Component):
             scroll_background_color (str | None, optional): Background color for scroll effect.
             scroll_title_color (str | None, optional): Color for credit titles.
             scroll_name_color (str | None, optional): Color for credit names.
+            layout_style (Literal["stacked", "two-column"], optional): Layout for credits ('title' above 'name' or side-by-side). Defaults to "stacked".
+            title_uppercase (bool, optional): Whether to display titles in uppercase. Defaults to False.
+            name_uppercase (bool, optional): Whether to display names in uppercase. Defaults to False.            
+            section_title_uppercase (bool, optional): Whether to display section titles in uppercase. Defaults to True.
+            swap_font_sizes_on_two_column (bool, optional): If True and layout is 'two-column', swap the font sizes of title and name. Defaults to False.
             label (str | I18nData | None, optional): Component label.
             every (float | None, optional): Interval for periodic updates.
             inputs (Component | Sequence[Component] | set[Component] | None, optional): Input components for events.
@@ -123,6 +133,12 @@ class CreditsPanel(Component):
         self.scroll_background_color = scroll_background_color
         self.scroll_title_color = scroll_title_color
         self.scroll_name_color = scroll_name_color
+        self.layout_style = layout_style
+        self.title_uppercase = title_uppercase
+        self.name_uppercase = name_uppercase
+        self.section_title_uppercase = section_title_uppercase
+        self.swap_font_sizes_on_two_column = swap_font_sizes_on_two_column
+        
         super().__init__(
             label=label,
             every=every,
@@ -217,7 +233,12 @@ class CreditsPanel(Component):
             "logo_height": self.logo_height,
             "scroll_background_color": self.scroll_background_color,
             "scroll_title_color": self.scroll_title_color,
-            "scroll_name_color": self.scroll_name_color
+            "scroll_name_color": self.scroll_name_color,
+            "layout_style": self.layout_style,
+            "title_uppercase": self.title_uppercase,
+            "name_uppercase": self.name_uppercase,
+            "section_title_uppercase": self.section_title_uppercase,
+            "swap_font_sizes_on_two_column": self.swap_font_sizes_on_two_column,
         }
 
     def api_info(self) -> Dict[str, Any]:
@@ -252,7 +273,12 @@ class CreditsPanel(Component):
             "logo_height": None,
             "scroll_background_color": None,
             "scroll_title_color": None,
-            "scroll_name_color": None
+            "scroll_name_color": None,
+            "layout_style": "stacked",
+            "title_uppercase": False,
+            "name_uppercase": False,
+            "section_title_uppercase": True,
+            "swap_font_sizes_on_two_column": False,
         }
 
     def example_value(self) -> Any:

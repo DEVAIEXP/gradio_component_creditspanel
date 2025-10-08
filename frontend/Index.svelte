@@ -11,7 +11,7 @@
   /**
    * Props for the Index component.
    * @typedef {Object} Value
-   * @property {Array<{title: string, name: string}>} credits - List of credits with title and name.
+   * @property {Array<{title?: string, name?: string, section_title?: string}>} credits - List of credits with title and name.
    * @property {Record<string, string>} licenses - License names and content.
    * @property {"scroll" | "starwars" | "matrix"} effect - Credits display effect.
    * @property {number} speed - Animation speed in seconds.
@@ -32,6 +32,11 @@
    * @property {string | null} scroll_name_color - Credit name color.
    * @property {number} title_font_size - Title font size (unused in StarWarsEffect).
    * @property {number} name_font_size - Name font size (unused in StarWarsEffect).
+   * @property {"stacked" | "two-column"} layout_style - Credit layout style.
+   * @property {boolean} title_uppercase - Transform title to uppercase.
+   * @property {boolean} name_uppercase - Transform name to uppercase.
+   * @property {boolean} section_title_uppercase - Transform section title to uppercase.
+   * @property {boolean} swap_font_sizes_on_two_column - Swap title/name font sizes in two-column layout.
    */
   export let value: Value | null = null;
   export let elem_id = "";
@@ -48,11 +53,9 @@
   // Default value if `value` is null
   $: effectiveValue = value || {
     credits: [
+      { section_title: "Default Team"},
       { title: "Lead Developer", name: "John Doe" },
       { title: "UI/UX Design", name: "Jane Smith" },
-      { title: "Backend Engineering", name: "Alex Ray" },
-      { title: "Component Concept", name: "Your Name" },
-      { title: "Quality Assurance", name: "Sam Wilson" },
     ],
     licenses: {
       "Gradio Framework": "Apache License placeholder",
@@ -74,7 +77,12 @@
     logo_height: null,
     scroll_background_color: null,
     scroll_title_color: null,
-    scroll_name_color: null   
+    scroll_name_color: null,    
+    layout_style: "stacked",
+    title_uppercase: false,
+    name_uppercase: false,
+    section_title_uppercase: true,
+    swap_font_sizes_on_two_column: false,
   };
 
   // Tracks selected license for display
@@ -200,7 +208,12 @@
                       intro_subtitle={effectiveValue.intro_subtitle}
                       background_color={effectiveValue.scroll_background_color}
                       title_color={effectiveValue.scroll_title_color}
-                      name_color={effectiveValue.scroll_name_color}               
+                      name_color={effectiveValue.scroll_name_color}                     
+                      layout_style={effectiveValue.layout_style}
+                      title_uppercase={effectiveValue.title_uppercase}
+                      name_uppercase={effectiveValue.name_uppercase}
+                      section_title_uppercase={effectiveValue.section_title_uppercase}
+                      swap_font_sizes_on_two_column={effectiveValue.swap_font_sizes_on_two_column}
                     />
                   {:else if effectiveValue.effect === "starwars"}
                     <StarWarsEffect
@@ -208,7 +221,12 @@
                       speed={effectiveValue.speed}
                       base_font_size={effectiveValue.base_font_size}
                       intro_title={effectiveValue.intro_title}
-                      intro_subtitle={effectiveValue.intro_subtitle}                
+                      intro_subtitle={effectiveValue.intro_subtitle}     
+                      layout_style={effectiveValue.layout_style}
+                      title_uppercase={effectiveValue.title_uppercase}
+                      name_uppercase={effectiveValue.name_uppercase}
+                      section_title_uppercase={effectiveValue.section_title_uppercase}
+                      swap_font_sizes_on_two_column={effectiveValue.swap_font_sizes_on_two_column}           
                     />
                   {:else if effectiveValue.effect === "matrix"}
                     <MatrixEffect
@@ -216,7 +234,12 @@
                       speed={effectiveValue.speed}
                       base_font_size={effectiveValue.base_font_size}
                       intro_title={effectiveValue.intro_title}
-                      intro_subtitle={effectiveValue.intro_subtitle}                
+                      intro_subtitle={effectiveValue.intro_subtitle}    
+                      layout_style={effectiveValue.layout_style}
+                      title_uppercase={effectiveValue.title_uppercase}
+                      name_uppercase={effectiveValue.name_uppercase}
+                      section_title_uppercase={effectiveValue.section_title_uppercase}
+                      swap_font_sizes_on_two_column={effectiveValue.swap_font_sizes_on_two_column}            
                     />
                   {/if}
                 </div>
@@ -251,6 +274,7 @@
     {/key}
   {/if}
 </Block>
+
 <svelte:head>
   {#if effectiveValue.sidebar_position === "bottom"}
     <!-- Bottom sidebar styles -->
