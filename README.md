@@ -10,7 +10,8 @@ app_file: space.py
 ---
 
 # `gradio_creditspanel`
-<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.3%20-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_creditspanel"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_creditspanel'>Component GitHub Code</a></span></p>
+<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.4%20-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_creditspanel"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_creditspanel'>Component GitHub Code</a></span></p>
+
 
 Credits Panel for Gradio UI
 
@@ -43,7 +44,7 @@ def setup_demo_files():
         with open("./assets/logo.webp", "w") as f:
             f.write("Placeholder WebP logo")
 
-# --- UPDATED: Credits list with sections ---
+# --- Credits list with sections ---
 credits_list = [
     {"section_title": "Project Leadership"},
     {"title": "Project Manager", "name": "Emma Thompson"},
@@ -72,6 +73,8 @@ DEFAULT_SPEEDS = {
     "starwars": 70.0,
     "matrix": 40.0
 }
+SCROLL_LOGO_PATH = "./assets/gradio_logo_white.png"
+LOGO_PATH="./assets/logo.webp"
 
 def update_panel(
     effect: str, 
@@ -89,39 +92,52 @@ def update_panel(
     logo_height: str | None,
     scroll_background_color: str | None, 
     scroll_title_color: str | None, 
+    scroll_section_title_color: str | None,
     scroll_name_color: str | None,    
     layout_style: str, 
     title_uppercase: bool, 
     name_uppercase: bool, 
     section_title_uppercase: bool,
-    swap_font_sizes: bool
+    swap_font_sizes: bool,
+    show_scroll_logo: bool,
+    scroll_logo_height: str | None
 ) -> dict:
     """Callback function that updates all properties of the CreditsPanel component."""
-    return gr.update(
-        visible=True,
-        effect=effect, 
-        speed=speed, 
-        base_font_size=base_font_size,
-        intro_title=intro_title, 
-        intro_subtitle=intro_subtitle,
-        sidebar_position=sidebar_position, 
-        show_logo=show_logo,
-        show_licenses=show_licenses, 
-        show_credits=show_credits,
-        logo_position=logo_position, 
-        logo_sizing=logo_sizing,
-        logo_width=logo_width, 
-        logo_height=logo_height,
-        scroll_background_color=scroll_background_color,
-        scroll_title_color=scroll_title_color,
-        scroll_name_color=scroll_name_color,        
-        layout_style=layout_style,
-        title_uppercase=title_uppercase,
-        name_uppercase=name_uppercase,
-        section_title_uppercase=section_title_uppercase,
-        swap_font_sizes_on_two_column=swap_font_sizes,
-        value=credits_list
-    )
+        
+    scroll_logo_path = SCROLL_LOGO_PATH if show_scroll_logo else None
+    
+    if not scroll_logo_height:
+        scroll_logo_height = "120px"
+        
+    return {
+        "credits": credits_list,
+        "licenses": license_paths,
+        "effect": effect,
+        "speed": speed,
+        "base_font_size": base_font_size,
+        "intro_title": intro_title,
+        "intro_subtitle": intro_subtitle,
+        "sidebar_position": sidebar_position,
+        "logo_path": LOGO_PATH, 
+        "show_logo": show_logo,
+        "show_licenses": show_licenses,
+        "show_credits": show_credits,
+        "logo_position": logo_position,
+        "logo_sizing": logo_sizing,
+        "logo_width": logo_width,
+        "logo_height": logo_height,
+        "scroll_background_color": scroll_background_color,
+        "scroll_title_color": scroll_title_color,
+        "scroll_name_color": scroll_name_color,
+        "scroll_section_title_color": scroll_section_title_color,
+        "layout_style": layout_style,
+        "title_uppercase": title_uppercase,
+        "name_uppercase": name_uppercase,
+        "section_title_uppercase": section_title_uppercase,
+        "swap_font_sizes_on_two_column": swap_font_sizes,
+        "scroll_logo_path": scroll_logo_path,
+        "scroll_logo_height": scroll_logo_height,
+    }
 
 def update_ui_on_effect_change(effect: str) -> tuple[float, float]:
     """Updates sliders to sensible defaults when the animation effect is changed."""
@@ -163,6 +179,14 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         name_uppercase_checkbox = gr.Checkbox(label="Name Uppercase", value=False)
         section_title_uppercase_checkbox = gr.Checkbox(label="Section Uppercase", value=True)
         
+        gr.Markdown("### Scrolling Logo")
+        show_scroll_logo_checkbox = gr.Checkbox(
+            label="Show Logo in Credits Roll", 
+            value=True, 
+            info="Toggles the logo above the intro text."
+        )
+        scroll_logo_height_input = gr.Textbox(label="Scrolling Logo Height", value="100px")
+        
         gr.Markdown("### Intro Text")
         intro_title_input = gr.Textbox(label="Intro Title", value="Gradio")
         intro_subtitle_input = gr.Textbox(label="Intro Subtitle", value="The best UI framework")
@@ -182,19 +206,20 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         gr.Markdown("### Color Settings (Scroll Effect)")
         scroll_background_color = gr.ColorPicker(label="Background Color", value="#000000")
         scroll_title_color = gr.ColorPicker(label="Title Color", value="#FFFFFF")
+        scroll_section_title_color = gr.ColorPicker(label="Section Title Color", value="#FFFFFF")
         scroll_name_color = gr.ColorPicker(label="Name Color", value="#FFFFFF")
 
-    panel = CreditsPanel(
+    panel = CreditsPanel(       
+        height=500,
         credits=credits_list,
         licenses=license_paths,
         effect="scroll",
-        height=500,
         speed=DEFAULT_SPEEDS["scroll"],
         base_font_size=1.5,
         intro_title="Gradio",
         intro_subtitle="The best UI framework",
         sidebar_position="right",
-        logo_path="./assets/logo.webp",
+        logo_path=LOGO_PATH,
         show_logo=True,
         show_licenses=True,
         show_credits=True,
@@ -205,11 +230,14 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         scroll_background_color="#000000",
         scroll_title_color="#FFFFFF",
         scroll_name_color="#FFFFFF",       
+        scroll_section_title_color="#FFFFFF",
         layout_style="stacked",
         title_uppercase=False,
         name_uppercase=False,
         section_title_uppercase=True,
         swap_font_sizes_on_two_column=False,
+        scroll_logo_path=SCROLL_LOGO_PATH,
+        scroll_logo_height="100px",
     )
 
     inputs = [
@@ -227,15 +255,23 @@ with gr.Blocks(theme=gr.themes.Ocean(), title="CreditsPanel Demo") as demo:
         logo_width_input, 
         logo_height_input,
         scroll_background_color, 
-        scroll_title_color, 
+        scroll_title_color,
+        scroll_section_title_color, 
         scroll_name_color,        
         layout_style_radio, 
         title_uppercase_checkbox, 
         name_uppercase_checkbox,
         section_title_uppercase_checkbox,
-        swap_sizes_checkbox
+        swap_sizes_checkbox,
+        show_scroll_logo_checkbox,
+        scroll_logo_height_input
     ]
 
+    demo.load(
+        fn=update_panel,
+        inputs=inputs,
+        outputs=panel
+    )
     layout_style_radio.change(
         fn=toggle_swap_checkbox_visibility,
         inputs=layout_style_radio,
@@ -270,29 +306,8 @@ if __name__ == "__main__":
 <td align="left" style="width: 25%;">
 
 ```python
-Any
-```
-
-</td>
-<td align="left"><code>None</code></td>
-<td align="left">None</td>
-</tr>
-
-<tr>
-<td align="left"><code>credits</code></td>
-<td align="left" style="width: 25%;">
-
-```python
-typing.Union[
-    typing.List[typing.Dict[str, str]],
-    typing.Callable,
-    NoneType,
-][
-    typing.List[typing.Dict[str, str]][
-        typing.Dict[str, str][str, str]
-    ],
-    Callable,
-    None,
+typing.Optional[typing.Dict[str, typing.Any]][
+    typing.Dict[str, typing.Any][str, Any], None
 ]
 ```
 
@@ -320,6 +335,29 @@ int | str | None
 
 ```python
 int | str | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">None</td>
+</tr>
+
+<tr>
+<td align="left"><code>credits</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+typing.Union[
+    typing.List[typing.Dict[str, str]],
+    typing.Callable,
+    NoneType,
+][
+    typing.List[typing.Dict[str, str]][
+        typing.Dict[str, str][str, str]
+    ],
+    Callable,
+    None,
+]
 ```
 
 </td>
@@ -567,6 +605,19 @@ str | None
 </tr>
 
 <tr>
+<td align="left"><code>scroll_section_title_color</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+str | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">None</td>
+</tr>
+
+<tr>
 <td align="left"><code>layout_style</code></td>
 <td align="left" style="width: 25%;">
 
@@ -628,6 +679,32 @@ bool
 
 </td>
 <td align="left"><code>False</code></td>
+<td align="left">None</td>
+</tr>
+
+<tr>
+<td align="left"><code>scroll_logo_path</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+str | pathlib.Path | None
+```
+
+</td>
+<td align="left"><code>None</code></td>
+<td align="left">None</td>
+</tr>
+
+<tr>
+<td align="left"><code>scroll_logo_height</code></td>
+<td align="left" style="width: 25%;">
+
+```python
+str
+```
+
+</td>
+<td align="left"><code>"120px"</code></td>
 <td align="left">None</td>
 </tr>
 
@@ -844,7 +921,6 @@ The impact on the users predict function varies depending on whether the compone
 
 The code snippet below is accurate in cases where the component is used as both an input and an output.
 
-- **As output:** Is passed, dict[str, Any] | None: The input payload, returned unchanged.
 
 
  ```python
@@ -852,7 +928,9 @@ The code snippet below is accurate in cases where the component is used as both 
      value: typing.Optional[typing.Dict[str, typing.Any]][
     typing.Dict[str, typing.Any][str, Any], None
 ]
- ) -> Any:
+ ) -> typing.Optional[typing.Dict[str, typing.Any]][
+    typing.Dict[str, typing.Any][str, Any], None
+]:
      return value
  ```
  

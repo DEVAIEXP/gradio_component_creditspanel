@@ -14,6 +14,8 @@
    * @property {boolean} name_uppercase - Transform name to uppercase.
    * @property {boolean} section_title_uppercase - Transform section title to uppercase.
    * @property {boolean} swap_font_sizes_on_two_column - Swap title/name font sizes.
+   * @property {{path: string | null, url: string | null, ...} | null} scroll_logo_path - Logo to display inside the scroll.
+   * @property {string} scroll_logo_height - Height of the scrolling logo.
    */
   export let credits: Props["credits"];
   export let speed: number = 20;
@@ -25,6 +27,8 @@
   export let name_uppercase: boolean = false;
   export let section_title_uppercase: boolean = true;
   export let swap_font_sizes_on_two_column: boolean = false;
+  export let scroll_logo_path: { url: string | null } | null = null;
+  export let scroll_logo_height: string = "120px";
 
   // Combines intro and credits for display
   $: display_items = (() => {
@@ -142,6 +146,11 @@
       bind:this={contentElement}
       style="--animation-duration: {speed}s;"
     >
+      {#if scroll_logo_path?.url}
+        <div class="scroll-logo-container">
+          <img src={scroll_logo_path.url} alt="Scrolling Logo" style:height={scroll_logo_height} />
+        </div>
+      {/if}
       {#each display_items as item}
         <!-- Render Section Title -->
         {#if item.section_title}
@@ -304,5 +313,17 @@
     flex: 1;
     text-align: left;
     padding-left: 1em;
+  }
+  .scroll-logo-container {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .scroll-logo-container img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80%;
+    object-fit: contain;    
+    filter: grayscale(1) brightness(0.5) sepia(100%) hue-rotate(50deg) saturate(500%); 
   }
 </style>

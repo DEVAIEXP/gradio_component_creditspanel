@@ -7,6 +7,7 @@
      * @property {number} base_font_size - Base font size in rem (default: 1.5).
      * @property {string | null} background_color - Background color (default: black).
      * @property {string | null} title_color - Title text color (default: white).
+     * @property {string | null} scroll_section_title_color - Section title color.
      * @property {string | null} name_color - Name text color (default: white).
      * @property {string | null} intro_title - Optional intro title.
      * @property {string | null} intro_subtitle - Optional intro subtitle.
@@ -15,12 +16,16 @@
      * @property {boolean} name_uppercase - Transform name to uppercase.
      * @property {boolean} section_title_uppercase - Transform section title to uppercase.
      * @property {boolean} swap_font_sizes_on_two_column - Swap title/name font sizes.
+     * @property {{path: string | null, url: string | null, ...} | null} scroll_logo_path - Logo to display inside the scroll.
+     * @property {string} scroll_logo_height - Height of the scrolling logo.
+     * 
      */
     export let credits: Props['credits'];
     export let speed: number;
     export let base_font_size: number = 1.5;
     export let background_color: string | null = null;
     export let title_color: string | null = null;
+    export let scroll_section_title_color: string | null = null;
     export let name_color: string | null = null;
     export let intro_title: string | null = null;
     export let intro_subtitle: string | null = null;
@@ -29,6 +34,8 @@
     export let name_uppercase: boolean = false;
     export let section_title_uppercase: boolean = true;
     export let swap_font_sizes_on_two_column: boolean = false;
+    export let scroll_logo_path: { url: string | null } | null = null;
+    export let scroll_logo_height: string = "120px";
 
     // Flag to trigger animation reset
     let reset = false;
@@ -48,8 +55,8 @@
 
     // Reactive styles for title and name
     $: title_style = (is_intro: boolean) => `color: ${title_color || 'white'}; font-size: ${is_intro ? base_font_size * 1.5 : base_font_size}rem;`;
-    $: name_style = (is_intro: boolean) => `color: ${name_color || 'white'}; font-size: ${is_intro ? base_font_size * 0.9 : base_font_size * 0.8}rem;`;
-    $: section_title_style = `color: ${title_color || 'white'}; font-size: ${base_font_size * 1.2}rem;`;
+    $: name_style = (is_intro: boolean) => `color: ${name_color || 'white'}; font-size: ${is_intro ? base_font_size * 0.9 : base_font_size * 0.8}rem;`;    
+    $: section_title_style = `color: ${scroll_section_title_color || title_color || 'white'}; font-size: ${base_font_size * 1.2}rem;`;
     
     // Reset animation on prop changes
    function resetAnimation() {
@@ -64,6 +71,11 @@
 <div class="wrapper" style:--animation-duration="{speed}s" style:background={background_color || 'black'}>
     {#if !reset}
         <div class="credits-container">
+            {#if scroll_logo_path?.url}
+                <div class="scroll-logo-container" style:height={scroll_logo_height}>
+                <img src={scroll_logo_path.url} alt="Scrolling Logo" style:height={scroll_logo_height} />
+                </div>
+            {/if}
             {#each display_items as item}
                 <!-- Render Section Title -->
                 {#if item.section_title}
@@ -107,6 +119,17 @@
         overflow: hidden;
         position: relative;
         font-family: sans-serif;
+    }
+    .scroll-logo-container {                
+        text-align: center;
+        margin-bottom: 2rem; /* Space between logo and intro text */
+    }
+    .scroll-logo-container img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 80%;
+        object-fit: contain;
     }
 
     /* Animated container holding all credit items */

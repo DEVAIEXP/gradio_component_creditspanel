@@ -13,7 +13,8 @@ import os
 class CreditsPanel(Component):
     """
     A Gradio component for displaying credits with customizable visual effects, such as scrolling or Star Wars-style animations.
-    Supports displaying a logo, licenses, and configurable text styling.
+    This component is configured via a single dictionary `value` that holds all settings.
+    It supports displaying a logo, licenses, sections, and various text styling options.
 
     Attributes:
         EVENTS (list): Supported events for the component, currently only `change`.
@@ -23,11 +24,13 @@ class CreditsPanel(Component):
 
     def __init__(
         self,
-        value: Any = None,
-        credits: List[Dict[str, str]] | Callable | None = None,
+        value: Dict[str, Any] | None = None,
         *,
+        # Structural parameters
         height: int | str | None = None,
         width: int | str | None = None,
+        # Configuration parameters (will be part of the `value` dictionary)
+        credits: List[Dict[str, str]] | Callable | None = None,
         licenses: Dict[str, str | Path] | None = None,
         effect: Literal["scroll", "starwars", "matrix"] = "scroll",
         speed: float = 40.0,
@@ -46,11 +49,15 @@ class CreditsPanel(Component):
         scroll_background_color: str | None = None,
         scroll_title_color: str | None = None,
         scroll_name_color: str | None = None,
+        scroll_section_title_color: str | None = None,
         layout_style: Literal["stacked", "two-column"] = "stacked",
         title_uppercase: bool = False,
         name_uppercase: bool = False,
         section_title_uppercase: bool = True,
         swap_font_sizes_on_two_column: bool = False,
+        scroll_logo_path: str | Path | None = None,
+        scroll_logo_height: str = "120px",
+        # Standard Gradio parameters
         label: str | I18nData | None = None,
         every: float | None = None,
         inputs: Component | Sequence[Component] | set[Component] | None = None,
@@ -70,74 +77,77 @@ class CreditsPanel(Component):
         Initialize the CreditsPanel component.
 
         Args:
-            value (Any, optional): Initial value for the component.
-            credits (List[Dict[str, str]] | Callable | None, optional): List of credits as dictionaries with 'title' and 'name' keys, or a callable that returns such a list.
-            height (int | str | None, optional): Height of the component (e.g., in pixels or CSS units).
-            width (int | str | None, optional): Width of the component (e.g., in pixels or CSS units).
-            licenses (Dict[str, str | Path] | None, optional): Dictionary mapping license names to file paths or content strings.
-            effect (Literal["scroll", "starwars", "matrix"], optional): Visual effect for credits display. Defaults to "scroll".
+            value (Dict[str, Any], optional): The dictionary containing the component's full configuration. 
+                                              If provided, it overrides all other configuration parameters.
+            height (int | str | None, optional): The structural height of the component.
+            width (int | str | None, optional): The structural width of the component.
+            credits (List[Dict[str, str]] | Callable | None, optional): List of credits, can include section headers.
+            licenses (Dict[str, str | Path] | None, optional): Dictionary mapping license names to file paths.
+            effect (Literal["scroll", "starwars", "matrix"], optional): Visual effect for the credits. Defaults to "scroll".
             speed (float, optional): Animation speed in seconds. Defaults to 40.0.
-            base_font_size (float, optional): Base font size in rem for credits text. Defaults to 1.5.
-            intro_title (str | None, optional): Title for the intro section, if any.
-            intro_subtitle (str | None, optional): Subtitle for the intro section, if any.
+            base_font_size (float, optional): Base font size in rem. Defaults to 1.5.
+            intro_title (str | None, optional): Title for the intro sequence.
+            intro_subtitle (str | None, optional): Subtitle for the intro sequence.
             sidebar_position (Literal["right", "bottom"], optional): Position of the licenses sidebar. Defaults to "right".
-            logo_path (str | Path | None, optional): Path or URL to the logo image.
-            show_logo (bool, optional): Whether to display the logo. Defaults to True.
+            logo_path (str | Path | None, optional): Path or URL to the main static logo.
+            show_logo (bool, optional): Whether to display the main logo. Defaults to True.
             show_licenses (bool, optional): Whether to display licenses. Defaults to True.
-            show_credits (bool, optional): Whether to display the credits. Defaults to True.
-            logo_position (Literal["center", "left", "right"], optional): Logo alignment. Defaults to "center".
-            logo_sizing (Literal["stretch", "crop", "resize"], optional): Logo sizing mode. Defaults to "resize".
-            logo_width (int | str | None, optional): Logo width (e.g., in pixels or CSS units).
-            logo_height (int | str | None, optional): Logo height (e.g., in pixels or CSS units).
-            scroll_background_color (str | None, optional): Background color for scroll effect.
+            show_credits (bool, optional): Whether to display the credits panel. Defaults to True.
+            logo_position (Literal["center", "left", "right"], optional): Main logo alignment. Defaults to "center".
+            logo_sizing (Literal["stretch", "crop", "resize"], optional): Main logo sizing mode. Defaults to "resize".
+            logo_width (int | str | None, optional): Main logo width.
+            logo_height (int | str | None, optional): Main logo height.
+            scroll_background_color (str | None, optional): Background color for the scroll effect.
             scroll_title_color (str | None, optional): Color for credit titles.
             scroll_name_color (str | None, optional): Color for credit names.
-            layout_style (Literal["stacked", "two-column"], optional): Layout for credits ('title' above 'name' or side-by-side). Defaults to "stacked".
+            scroll_section_title_color (str | None, optional): Color for section titles in the scroll effect.
+            layout_style (Literal["stacked", "two-column"], optional): Layout for credits. Defaults to "stacked".
             title_uppercase (bool, optional): Whether to display titles in uppercase. Defaults to False.
-            name_uppercase (bool, optional): Whether to display names in uppercase. Defaults to False.            
+            name_uppercase (bool, optional): Whether to display names in uppercase. Defaults to False.
             section_title_uppercase (bool, optional): Whether to display section titles in uppercase. Defaults to True.
-            swap_font_sizes_on_two_column (bool, optional): If True and layout is 'two-column', swap the font sizes of title and name. Defaults to False.
-            label (str | I18nData | None, optional): Component label.
-            every (float | None, optional): Interval for periodic updates.
-            inputs (Component | Sequence[Component] | set[Component] | None, optional): Input components for events.
-            show_label (bool, optional): Whether to show the label. Defaults to False.
-            container (bool, optional): Whether to render in a container. Defaults to True.
-            scale (int | None, optional): Scaling factor for the component.
-            min_width (int, optional): Minimum width in pixels. Defaults to 160.
-            interactive (bool | None, optional): Whether the component is interactive.
-            visible (bool, optional): Whether the component is visible. Defaults to True.
-            elem_id (str | None, optional): Custom HTML element ID.
-            elem_classes (list[str] | str | None, optional): CSS classes for the component.
-            render (bool, optional): Whether to render the component. Defaults to True.
-            key (int | str | tuple[int | str, ...] | None, optional): Component key for state preservation.
-            preserved_by_key (list[str] | str | None, optional): Properties preserved by key. Defaults to "value".
+            swap_font_sizes_on_two_column (bool, optional): Swaps title and name font sizes in two-column layout. Defaults to False.
+            scroll_logo_path (str | Path | None, optional): Path or URL to a logo inside the scrolling credits.
+            scroll_logo_height (str, optional): The height of the scrolling logo. Defaults to "120px".
+            (Other standard Gradio arguments)
         """
+        # Structural parameters are stored directly on self.
         self.height = height
         self.width = width
-        self.credits_data = credits if credits is not None else []
-        self.licenses_paths = licenses or {}
-        self.effect = effect
-        self.speed = speed
-        self.base_font_size = base_font_size
-        self.intro_title = intro_title
-        self.intro_subtitle = intro_subtitle
-        self.sidebar_position = sidebar_position
-        self.logo_path = logo_path
-        self.show_logo = show_logo
-        self.show_licenses = show_licenses
-        self.show_credits = show_credits
-        self.logo_position = logo_position
-        self.logo_sizing = logo_sizing
-        self.logo_width = logo_width
-        self.logo_height = logo_height
-        self.scroll_background_color = scroll_background_color
-        self.scroll_title_color = scroll_title_color
-        self.scroll_name_color = scroll_name_color
-        self.layout_style = layout_style
-        self.title_uppercase = title_uppercase
-        self.name_uppercase = name_uppercase
-        self.section_title_uppercase = section_title_uppercase
-        self.swap_font_sizes_on_two_column = swap_font_sizes_on_two_column
+        
+        # All other configuration parameters are bundled into a dictionary.
+        # This dictionary is the component's main `value`.
+        self._config = {
+            "credits": credits if credits is not None else [],
+            "licenses": licenses or {},
+            "effect": effect,
+            "speed": speed,
+            "base_font_size": base_font_size,
+            "intro_title": intro_title,
+            "intro_subtitle": intro_subtitle,
+            "sidebar_position": sidebar_position,
+            "logo_path": logo_path,
+            "show_logo": show_logo,
+            "show_licenses": show_licenses,
+            "show_credits": show_credits,
+            "logo_position": logo_position,
+            "logo_sizing": logo_sizing,
+            "logo_width": logo_width,
+            "logo_height": logo_height,
+            "scroll_background_color": scroll_background_color,
+            "scroll_title_color": scroll_title_color,
+            "scroll_name_color": scroll_name_color,
+            "scroll_section_title_color": scroll_section_title_color,
+            "layout_style": layout_style,
+            "title_uppercase": title_uppercase,
+            "name_uppercase": name_uppercase,
+            "section_title_uppercase": section_title_uppercase,
+            "swap_font_sizes_on_two_column": swap_font_sizes_on_two_column,
+            "scroll_logo_path": scroll_logo_path,
+            "scroll_logo_height": scroll_logo_height,
+        }
+        
+        # If a `value` dictionary is passed directly, it overrides the individual parameters.
+        initial_value = value if value is not None else self._config
         
         super().__init__(
             label=label,
@@ -154,35 +164,14 @@ class CreditsPanel(Component):
             key=key,
             visible=visible,
             preserved_by_key=preserved_by_key,
-            value=value,
+            value=initial_value, # The component's state is its configuration dictionary.
         )
 
-    def _process_license_files(self) -> Dict[str, str]:
-        """
-        Process license files into a dictionary of name-content pairs.
-
-        Returns:
-            Dict[str, str]: Dictionary mapping license names to their content or error messages if loading fails.
-        """
-        processed = {}
-        for name, path in self.licenses_paths.items():
-            try:
-                with open(path, "r", encoding="utf-8") as f:
-                    processed[name] = f.read()
-            except Exception as e:
-                processed[name] = f"Error loading license file '{path}':\n{e}"
-        return processed
-
-    def _process_logo_path(self) -> Dict[str, Any] | None:
-        """
-        Process the logo path, handling both local files and URLs.
-
-        Returns:
-            Dict[str, Any] | None: Dictionary with logo details (path, url, orig_name, mime_type) or None if no logo_path is provided or the file is not found.
-        """
-        if not self.logo_path:
+    def _process_image_path(self, image_path: str | Path | None) -> Dict[str, Any] | None:
+        """Helper function to process an image path, handling local files and URLs."""
+        if not image_path:
             return None
-        path = str(self.logo_path)
+        path = str(image_path)
         if is_http_url_like(path):
             return {"path": None, "url": path, "orig_name": Path(path).name, "mime_type": None}
         if os.path.exists(path):
@@ -191,75 +180,55 @@ class CreditsPanel(Component):
 
     def preprocess(self, payload: Dict[str, Any] | None) -> Dict[str, Any] | None:
         """
-        Preprocess the input payload.
-
-        Args:
-            payload (Dict[str, Any] | None): Input data to preprocess.
-
-        Returns:
-            Dict[str, Any] | None: The input payload, returned unchanged.
+        Passes the payload from the frontend through, unmodified.
         """
         return payload
 
-    def postprocess(self, value: Any) -> Dict[str, Any] | None:
+    def postprocess(self, value: Dict[str, Any] | None) -> Dict[str, Any] | None:
         """
-        Postprocess the component's value to prepare data for rendering.
-
+        Processes the component's `value` dictionary to prepare data for the frontend.
+        This involves resolving file paths for licenses and images.
+        
         Args:
-            value (Any): Input value, typically a list of credits.
+            value (Dict[str, Any] | None): The component's configuration dictionary.
 
         Returns:
-            Dict[str, Any] | None: Dictionary containing processed credits, licenses, and configuration, or None if no credits or licenses are provided.
+            Dict[str, Any] | None: The processed dictionary ready to be sent to the frontend.
         """
-        credits_source = value if isinstance(value, list) else self.credits_data
-        if not credits_source and not self.licenses_paths:
+        if not value:
             return None
-        return {
-            "credits": credits_source,
-            "licenses": self._process_license_files() if self.show_licenses else {},
-            "effect": self.effect,
-            "speed": self.speed,
-            "base_font_size": self.base_font_size,
-            "intro_title": self.intro_title,
-            "intro_subtitle": self.intro_subtitle,
-            "sidebar_position": self.sidebar_position,
-            "logo_path": self._process_logo_path(),
-            "show_logo": self.show_logo,
-            "show_licenses": self.show_licenses,
-            "show_credits": self.show_credits,
-            "logo_position": self.logo_position,
-            "logo_sizing": self.logo_sizing,
-            "logo_width": self.logo_width,
-            "logo_height": self.logo_height,
-            "scroll_background_color": self.scroll_background_color,
-            "scroll_title_color": self.scroll_title_color,
-            "scroll_name_color": self.scroll_name_color,
-            "layout_style": self.layout_style,
-            "title_uppercase": self.title_uppercase,
-            "name_uppercase": self.name_uppercase,
-            "section_title_uppercase": self.section_title_uppercase,
-            "swap_font_sizes_on_two_column": self.swap_font_sizes_on_two_column,
-        }
+        
+        processed_value = value.copy()
+        
+        # Process license file paths from the 'licenses' dictionary
+        license_paths = processed_value.get("licenses", {})
+        processed_licenses = {}
+        if isinstance(license_paths, dict): # Check if licenses are in the expected format
+            for name, path in license_paths.items():
+                try:
+                    with open(path, "r", encoding="utf-8") as f:
+                        processed_licenses[name] = f.read()
+                except Exception as e:
+                    # Silently fail or log, to avoid crashing the app for a missing license file
+                    processed_licenses[name] = f"Error loading license file '{path}':\n{e}"
+        processed_value["licenses"] = processed_licenses
 
+        # Process image paths
+        processed_value["logo_path"] = self._process_image_path(processed_value.get("logo_path"))
+        processed_value["scroll_logo_path"] = self._process_image_path(processed_value.get("scroll_logo_path"))
+
+        return processed_value
+    
     def api_info(self) -> Dict[str, Any]:
-        """
-        Provide API information for the component.
-
-        Returns:
-            Dict[str, Any]: Dictionary indicating the component's data type ("object").
-        """
+        """Returns API info for the component."""
         return {"type": "object"}
 
     def example_payload(self) -> Any:
-        """
-        Provide an example payload for the component.
-
-        Returns:
-            Dict[str, Any]: Example data structure for the component's payload.
-        """
+        """Returns an example payload for the component's API."""
+        # This now directly returns a dictionary matching the `value` structure.
         return {
-            "credits": [{"title": "Example", "name": "Credit"}],
-            "licenses": {},
+            "credits": [{"title": "API Example", "name": "Credit"}],
+            "licenses": {"MIT": "MIT License text..."},
             "effect": "scroll",
             "speed": 20,
             "sidebar_position": "right",
@@ -274,18 +243,17 @@ class CreditsPanel(Component):
             "scroll_background_color": None,
             "scroll_title_color": None,
             "scroll_name_color": None,
+            "scroll_section_title_color": None,
             "layout_style": "stacked",
             "title_uppercase": False,
             "name_uppercase": False,
             "section_title_uppercase": True,
             "swap_font_sizes_on_two_column": False,
+            "scroll_logo_path": None,
+            "scroll_logo_height": "120px",
         }
 
     def example_value(self) -> Any:
-        """
-        Provide an example value for the component.
-
-        Returns:
-            List[Dict[str, str]]: Example list of credits.
-        """
-        return [{"title": "Example", "name": "Credit"}]
+        """Returns an example value for the component."""
+        # The example value is now the entire configuration dictionary.
+        return self.example_payload()
