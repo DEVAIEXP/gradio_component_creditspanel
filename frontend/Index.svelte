@@ -275,9 +275,16 @@
                 {/each}
               </ul>
               {#if selected_license_name}
-                <div class="license-display">
-                  <h4>{selected_license_name}</h4>
-                  <pre>{effectiveValue.licenses[selected_license_name]}</pre>
+              {@const license = effectiveValue.licenses[selected_license_name]}
+              <div class="license-display">
+                <h4>{selected_license_name}</h4>
+                {#if license.type === 'markdown'}
+                    <div class="markdown-content">
+                      {@html license.content}
+                    </div>
+                  {:else}
+                    <pre>{license.content}</pre>
+                  {/if}
                 </div>
               {/if}
             </div>
@@ -313,17 +320,17 @@
   {:else}
     <!-- Right sidebar styles -->
     <style>
-            .credits-panel-wrapper { 
-              flex-direction: row !important; 
-              --panel-direction: row; 
-              --sidebar-width: 400px; 
-              --border-left: 1px solid var(--border-color-primary); 
-              --border-top: none; 
-              --border: none;
-              --sidebar-max-height: {height_style}; 
-            }
-            .licenses-sidebar { width: var(--sidebar-width, 400px) !important; border-left: 1px solid var(--border-color-primary) !important; border-top: none !important; }
-            .main-credits-panel { width: calc(100% - var(--sidebar-width, 400px)) !important; }
+        .credits-panel-wrapper { 
+          flex-direction: row !important; 
+          --panel-direction: row; 
+          --sidebar-width: 400px; 
+          --border-left: 1px solid var(--border-color-primary); 
+          --border-top: none; 
+          --border: none;
+          --sidebar-max-height: {height_style}; 
+        }
+        .licenses-sidebar { width: var(--sidebar-width, 400px) !important; border-left: 1px solid var(--border-color-primary) !important; border-top: none !important; }
+        .main-credits-panel { width: calc(100% - var(--sidebar-width, 400px)) !important; }
     </style>
   {/if}
 </svelte:head>
@@ -439,5 +446,48 @@
     word-break: break-word;
     font-size: var(--text-sm);
     color: var(--body-text-color-subdued);
+  }
+  /* Markdown styles */
+  .markdown-content {
+    white-space: normal;
+    word-break: break-word;
+    font-size: var(--text-sm);
+    color: var(--body-text-color);
+  }
+  .markdown-content :global(h1),
+  .markdown-content :global(h2),
+  .markdown-content :global(h3) {
+    color: var(--body-text-color-strong);
+    margin-bottom: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+  }
+  .markdown-content :global(p) {
+    margin-bottom: var(--spacing-md);
+    line-height: 1.6;
+  }
+  .markdown-content :global(ul),
+  .markdown-content :global(ol) {
+    padding-left: 20px;
+    margin-bottom: var(--spacing-md);
+  }
+  .markdown-content :global(li) {
+    margin-bottom: var(--spacing-sm);
+  }
+  .markdown-content :global(a) {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  .markdown-content :global(a:hover) {
+    text-decoration: underline;
+  }
+  .markdown-content :global(code) {
+    background-color: var(--background-fill-secondary);
+    padding: 0.2em 0.4em;
+    border-radius: var(--radius-sm);
+  }
+  .markdown-content :global(pre code) {
+    display: block;
+    padding: var(--spacing-md);
+    overflow-x: auto;
   }
 </style>

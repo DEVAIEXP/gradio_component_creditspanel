@@ -13,6 +13,29 @@ def setup_demo_files():
     if not os.path.exists("LICENSES/MIT.txt"):
         with open("LICENSES/MIT.txt", "w") as f:
             f.write("MIT License\nCopyright (c) 2025 Author...")
+    
+    md_content = ""
+    if not os.path.exists("LICENSES/Component_License.md"):
+        md_content = """
+        # Component License (Markdown)
+
+        This is a sample license file written in **Markdown** to demonstrate rendering capabilities.
+
+        ## Key Points
+        - You are free to use this component in your projects.
+        - Attribution is appreciated but not required.
+        - The component is provided *as-is*, without warranty.
+
+        ## More Information
+        For more details, please visit the [Gradio website](https://www.gradio.app).
+
+        ```python        
+        print("Hello, Gradio!")
+        ```
+        """
+        with open("LICENSES/Component_License.md", "w") as f:
+            f.write(md_content)
+        
     os.makedirs("assets", exist_ok=True)
     if not os.path.exists("./assets/logo.webp"):
         with open("./assets/logo.webp", "w") as f:
@@ -39,7 +62,8 @@ credits_list = [
 
 license_paths = {
     "Gradio Framework": "./LICENSES/Apache.txt",
-    "This Component": "./LICENSES/MIT.txt"
+    "This Component": "./LICENSES/MIT.txt",
+    "(MD) File Example": "./LICENSES/Component_License.md"
 }
 
 DEFAULT_SPEEDS = {

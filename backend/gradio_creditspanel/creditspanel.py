@@ -8,7 +8,8 @@ from gradio.components import Component
 from gradio.events import Events
 from gradio.i18n import I18nData
 import os
-
+import markdown
+import textwrap 
 @document()
 class CreditsPanel(Component):
     """
@@ -206,11 +207,23 @@ class CreditsPanel(Component):
         if isinstance(license_paths, dict): # Check if licenses are in the expected format
             for name, path in license_paths.items():
                 try:
-                    with open(path, "r", encoding="utf-8") as f:
-                        processed_licenses[name] = f.read()
+                    path_str = str(path)
+                    with open(path_str, "r", encoding="utf-8") as f:
+                        content = f.read()
+                    
+                    if path_str.lower().endswith(('.md', '.markdown')):
+                        # Convert Markdown to HTML and package it with a type identifier
+                        html_content = markdown.markdown(textwrap.dedent(content), extensions=['extra', 'codehilite'])
+                        processed_licenses[name] = {"content": html_content, "type": "markdown"}
+                    else:
+                        # Keep as plain text and package it with a type identifier
+                        processed_licenses[name] = {"content": content, "type": "text"}
+
                 except Exception as e:
-                    # Silently fail or log, to avoid crashing the app for a missing license file
-                    processed_licenses[name] = f"Error loading license file '{path}':\n{e}"
+                    # On error, provide a plain text error message
+                    error_content = f"Error loading license file '{path}':\n{e}"
+                    processed_licenses[name] = {"content": error_content, "type": "text"}
+                    
         processed_value["licenses"] = processed_licenses
 
         # Process image paths

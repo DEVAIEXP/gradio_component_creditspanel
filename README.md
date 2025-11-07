@@ -10,8 +10,7 @@ app_file: space.py
 ---
 
 # `gradio_creditspanel`
-<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.4%20-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_creditspanel"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_creditspanel'>Component GitHub Code</a></span></p>
-
+<img alt="Static Badge" src="https://img.shields.io/badge/version%20-%200.0.5%20-%20blue"> <a href="https://huggingface.co/spaces/elismasilva/gradio_creditspanel"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Demo-blue"></a><p><span>💻 <a href='https://github.com/DEVAIEXP/gradio_component_creditspanel'>Component GitHub Code</a></span></p>
 
 Credits Panel for Gradio UI
 
@@ -39,6 +38,29 @@ def setup_demo_files():
     if not os.path.exists("LICENSES/MIT.txt"):
         with open("LICENSES/MIT.txt", "w") as f:
             f.write("MIT License\nCopyright (c) 2025 Author...")
+    
+    md_content = ""
+    if not os.path.exists("LICENSES/Component_License.md"):
+        md_content = """
+        # Component License (Markdown)
+
+        This is a sample license file written in **Markdown** to demonstrate rendering capabilities.
+
+        ## Key Points
+        - You are free to use this component in your projects.
+        - Attribution is appreciated but not required.
+        - The component is provided *as-is*, without warranty.
+
+        ## More Information
+        For more details, please visit the [Gradio website](https://www.gradio.app).
+
+        ```python        
+        print("Hello, Gradio!")
+        ```
+        """
+        with open("LICENSES/Component_License.md", "w") as f:
+            f.write(md_content)
+        
     os.makedirs("assets", exist_ok=True)
     if not os.path.exists("./assets/logo.webp"):
         with open("./assets/logo.webp", "w") as f:
@@ -65,7 +87,8 @@ credits_list = [
 
 license_paths = {
     "Gradio Framework": "./LICENSES/Apache.txt",
-    "This Component": "./LICENSES/MIT.txt"
+    "This Component": "./LICENSES/MIT.txt",
+    "(MD) File Example": "./LICENSES/Component_License.md"
 }
 
 DEFAULT_SPEEDS = {
